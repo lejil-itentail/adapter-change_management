@@ -102,8 +102,7 @@ class ServiceNowAdapter extends EventEmitter {
             * the blocks for each branch.
             */
         if (error) {
-            this.emit("OFFLINE");
-            log.error(this.id);
+           this.emitOffline();
             /**
             * Write this block.
             * If an error was returned, we need to emit OFFLINE.
@@ -117,8 +116,8 @@ class ServiceNowAdapter extends EventEmitter {
             * for the callback's errorMessage parameter.
             */
         } else {
-            this.emit("ONLINE");
-            log.debug("Adapter is up and running");
+            this.emitOnline();
+            log.debug(result);
             /**
             * Write this block.
             * If no runtime problems were detected, emit ONLINE.
@@ -146,7 +145,7 @@ class ServiceNowAdapter extends EventEmitter {
      */
     emitOffline() {
         this.emitStatus('OFFLINE');
-        log.warn('ServiceNow: Instance is unavailable.');
+        log.error('ServiceNow: Instance is unavailable.');
     }
 
     /**
@@ -192,10 +191,7 @@ class ServiceNowAdapter extends EventEmitter {
          * Note how the object was instantiated in the constructor().
          * get() takes a callback function.
          */
-        let serviceNowConnector = {
-            ...this.connector
-        };
-        serviceNowConnector.get((result, error) => callback(result, error));
+        this.connector.get((result, error) => callback(result, error));
     }
 
     /**
@@ -214,10 +210,7 @@ class ServiceNowAdapter extends EventEmitter {
          * Note how the object was instantiated in the constructor().
          * post() takes a callback function.
          */
-        let serviceNowConnector = {
-            ...this.connector
-        };
-        serviceNowConnector.get((result, error) => callback(result, error));
+        this.connector.post((result, error) => callback(result, error));
     }
 }
 

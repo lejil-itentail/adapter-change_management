@@ -179,7 +179,7 @@ class ServiceNowAdapter extends EventEmitter {
         let serviceNowConnector = {
             ...this.connector
         };
-        serviceNowConnector.get((result, error) => callback(result, error));
+        serviceNowConnector.post((result, error) => callback(result, error));
     }
 }
 
