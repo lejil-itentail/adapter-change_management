@@ -1,13 +1,3 @@
-/*const options = {
-    "url": "https://dev96615.service-now.com/",
-    "auth": {
-        "username": 'admin',
-        "password": "GtfQWZ5fmM7c"
-    },
-    "serviceNowTable": "change_request"
-}; */
-
-
 // Import built-in Node.js package path.
 const path = require('path');
 
@@ -195,7 +185,7 @@ class ServiceNowAdapter extends EventEmitter {
      *   handles the response.
      */
     getRecord(callback) {
-       
+
         let changeTicket = {
             "change_ticket_number": null,
             "active": null,
@@ -249,36 +239,32 @@ class ServiceNowAdapter extends EventEmitter {
          * Note how the object was instantiated in the constructor().
          * post() takes a callback function.
          */
-        this.connector.post((result, error) => callback(result, error));
+        let changeTicket = {
+            "change_ticket_number": null,
+            "active": null,
+            "priority": null,
+            "description": null,
+            "work_start": null,
+            "work_end": null,
+            "change_ticket_key": null
+        };
+
+        this.connector.post((result, error) => {
+            if (result && result.body) {
+                let responseBody = JSON.parse(result.body);
+                if (responseBody && responseBody.result) {
+                    changeTicket.change_ticket_number = responseBody.result.number;
+                    changeTicket.active = responseBody.result.active;
+                    changeTicket.priority = responseBody.result.priority;
+                    changeTicket.description = responseBody.result.description;
+                    changeTicket.work_start = responseBody.result.work_start;
+                    changeTicket.work_end = responseBody.result.work_end;
+                    changeTicket.change_ticket_key = responseBody.result.sys_id;
+                }
+            }
+            callback(changeTicket, error)
+        });
     }
 }
 
 module.exports = ServiceNowAdapter;
-
-/*
-function mainObject() {
-    // Instantiate an object from class ServiceNowConnector.
-    //let options =
-    const connector = new ServiceNowAdapter('24', options);
-    // Test the object's get and post methods.
-    // You must write the arguments for get and post.
-
-    connector.getRecord((data, error) => {
-        if (error) {
-            console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
-        }
-        console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
-    });
-
-    connector.postRecord((data, error) => {
-        if (error) {
-            console.error(`\nError returned from POST request:\n${JSON.stringify(error)}`);
-        }
-        // console.log(`\nResponse returned from POST request:\n${JSON.stringify(data)}`)
-    });
-
-
-}
-
-// Test the object's get and post methods.
-mainObject(); */
