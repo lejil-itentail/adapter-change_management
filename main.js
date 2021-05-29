@@ -103,8 +103,7 @@ class ServiceNowAdapter extends EventEmitter {
              */
             if (error) {
                 this.emitOffline();
-                log.error(callback.error);
-                /**
+                 /**
                  * Write this block.
                  * If an error was returned, we need to emit OFFLINE.
                  * Log the returned error using IAP's global log object
