@@ -144,7 +144,7 @@ class ServiceNowConnector {
         } else if (this.isHibernating(response)) {
             console.error('Service Now instance is hibernating.');
             callback.error = 'Service Now instance is hibernating';
-            console.error(callbackError);
+            console.error(callback.error);
         } else {
             callback.response = response;
         }

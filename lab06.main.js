@@ -1,13 +1,3 @@
-/*const options = {
-    "url": "https://dev96615.service-now.com/",
-    "auth": {
-        "username": 'admin',
-        "password": "GtfQWZ5fmM7c"
-    },
-    "serviceNowTable": "change_request"
-}; */
-
-
 // Import built-in Node.js package path.
 const path = require('path');
 
@@ -94,57 +84,57 @@ class ServiceNowAdapter extends EventEmitter {
     }
 
     /**
-     * @memberof ServiceNowAdapter
-     * @method healthcheck
-     * @summary Check ServiceNow Health
-     * @description Verifies external system is available and healthy.
-     *   Calls method emitOnline if external system is available.
-     *
-     * @param {ServiceNowAdapter~requestCallback} [callback] - The optional callback
-     *   that handles the response.
-     */
+    * @memberof ServiceNowAdapter
+    * @method healthcheck
+    * @summary Check ServiceNow Health
+    * @description Verifies external system is available and healthy.
+    *   Calls method emitOnline if external system is available.
+    *
+    * @param {ServiceNowAdapter~requestCallback} [callback] - The optional callback
+    *   that handles the response.
+    */
     healthcheck(callback) {
         this.getRecord((result, error) => {
+        /**
+            * For this lab, complete the if else conditional
+            * statements that check if an error exists
+            * or the instance was hibernating. You must write
+            * the blocks for each branch.c
+            */
+        if (error) {
+           this.emitOffline();
             /**
-             * For this lab, complete the if else conditional
-             * statements that check if an error exists
-             * or the instance was hibernating. You must write
-             * the blocks for each branch.
-             */
-            if (error) {
-                this.emitOffline();
-                log.error(callback.error);
-                /**
-                 * Write this block.
-                 * If an error was returned, we need to emit OFFLINE.
-                 * Log the returned error using IAP's global log object
-                 * at an error severity. In the log message, record
-                 * this.id so an administrator will know which ServiceNow
-                 * adapter instance wrote the log message in case more
-                 * than one instance is configured.
-                 * If an optional IAP callback function was passed to
-                 * healthcheck(), execute it passing the error seen as an argument
-                 * for the callback's errorMessage parameter.
-                 */
-            } else {
-                this.emitOnline();
-                log.debug(result)
-                //     let  responseBody = JSON.parse(result.body);
-                //  console.info (responseBody);
-
-                /**
-                 * Write this block.
-                 * If no runtime problems were detected, emit ONLINE.
-                 * Log an appropriate message using IAP's global log object
-                 * at a debug severity.
-                 * If an optional IAP callback function was passed to
-                 * healthcheck(), execute it passing this function's result
-                 * parameter as an argument for the callback function's
-                 * responseData parameter.
-                 */
-            }
+            * Write this block.
+            * If an error was returned, we need to emit OFFLINE.
+            * Log the returned error using IAP's global log object
+            * at an error severity. In the log message, record
+            * this.id so an administrator will know which ServiceNow
+            * adapter instance wrote the log message in case more
+            * than one instance is configured.
+            * If an optional IAP callback function was passed to
+            * healthcheck(), execute it passing the error seen as an argument
+            * for the callback's errorMessage parameter.
+            */
+        } else {
+            this.emitOnline();
+            log.debug(result);
+            /**
+            * Write this block.
+            * If no runtime problems were detected, emit ONLINE.
+            * Log an appropriate message using IAP's global log object
+            * at a debug severity.
+            * If an optional IAP callback function was passed to
+            * healthcheck(), execute it passing this function's result
+            * parameter as an argument for the callback function's
+            * responseData parameter.
+            */
+        }
         });
     }
+
+
+
+
 
     /**
      * @memberof ServiceNowAdapter
@@ -195,42 +185,13 @@ class ServiceNowAdapter extends EventEmitter {
      *   handles the response.
      */
     getRecord(callback) {
-       
-        let changeTicket = {
-            "change_ticket_number": null,
-            "active": null,
-            "priority": null,
-            "description": null,
-            "work_start": null,
-            "work_end": null,
-            "change_ticket_key": null
-        };
-
-        let changeTickets = {
-            changeTicket: []
-        };
-
-        this.connector.get((result, error) => {
-            if (result && result.body) {
-                let responseBody = JSON.parse(result.body);
-                if (responseBody && responseBody.result && responseBody.result.length > 0) {
-                    let result = responseBody.result;
-
-                    for (let i = 0; i < result.length; i++) {
-                        changeTickets.changeTicket.push({
-                            "change_ticket_number": result[i].number,
-                            "active": result[i].active,
-                            "priority": result[i].priority,
-                            "description": result[i].description,
-                            "work_start": result[i].work_start,
-                            "work_end": result[i].work_end,
-                            "change_ticket_key": result[i].sys_id
-                        });
-                    }
-                }
-            }
-            callback(changeTickets, error)
-        });
+        /**
+         * Write the body for this function.
+         * The function is a wrapper for this.connector's get() method.
+         * Note how the object was instantiated in the constructor().
+         * get() takes a callback function.
+         */
+        this.connector.get((result, error) => callback(result, error));
     }
 
     /**
@@ -254,31 +215,3 @@ class ServiceNowAdapter extends EventEmitter {
 }
 
 module.exports = ServiceNowAdapter;
-
-/*
-function mainObject() {
-    // Instantiate an object from class ServiceNowConnector.
-    //let options =
-    const connector = new ServiceNowAdapter('24', options);
-    // Test the object's get and post methods.
-    // You must write the arguments for get and post.
-
-    connector.getRecord((data, error) => {
-        if (error) {
-            console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
-        }
-        console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
-    });
-
-    connector.postRecord((data, error) => {
-        if (error) {
-            console.error(`\nError returned from POST request:\n${JSON.stringify(error)}`);
-        }
-        // console.log(`\nResponse returned from POST request:\n${JSON.stringify(data)}`)
-    });
-
-
-}
-
-// Test the object's get and post methods.
-mainObject(); */
